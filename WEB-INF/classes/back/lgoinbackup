@@ -1,0 +1,226 @@
+package hellobeans;  
+
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.sql.DataSource;
+import java.sql.*;
+import java.util.*;
+import org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS;
+import org.apache.commons.dbcp.datasources.*;
+import java.io.*;
+
+public class Login extends HttpServlet {
+
+    //private static final String DB_JDBC_DRIVER = "org.h2.Driver";
+    private static final String DB_JDBC_DRIVER = "com.mysql.jdbc.Driver";
+    private static final String DB_USER = "cscc09f12_30";
+    private static final String DB_PWD = "athersucks";
+
+    /*
+     * Initialize database once at startup - move to Controller class if added later
+     */
+    public void init() {
+
+        Connection con; // to store the connection object
+        int rowsEffected = 0;   // intended for error checking; not used here
+
+        try {
+                // initialize connection pool
+                DriverAdapterCPDS ds = new DriverAdapterCPDS();
+                ds.setDriver(DB_JDBC_DRIVER); // set the h2 driver -- change to mySQL
+                // ds.setUrl("jdbc:mysql:" + getServletContext().getInitParameter("dbUrl")); // set the url from dbUrl
+                ds.setUrl("jdbc:mysql:" + "//mathlab.utsc.utoronto.ca:3306/cscc09f12_30");
+                ds.setUser(DB_USER);
+                ds.setPassword(DB_PWD);
+
+                SharedPoolDataSource dbcp = new SharedPoolDataSource();
+                dbcp.setConnectionPoolDataSource(ds); // set the datasource for connection pool
+
+                getServletContext().setAttribute("dbpool",dbcp); // make it available to all servlets
+            }
+            catch (Exception ex) {
+                getServletContext().log("SQLGatewayPool Error: " + ex.getMessage());
+        }
+
+
+        try {
+          String dbInit = getServletContext().getInitParameter("dbInit");
+
+          if (dbInit.equals("true")) {	// dbInit context says to initialize DB
+
+            // get connection pool
+            DataSource dbcp = (DataSource)getServletContext().getAttribute("dbpool");
+            con = dbcp.getConnection();
+
+            // Get a statement (used to issue SQL statements to the DB)
+            Statement stmt = con.createStatement();
+
+            // create Users table and drop existing
+            //String query = "DROP TABLE IF EXISTS Users";
+           // rowsEffected = stmt.executeUpdate(query);
+
+            //query = "CREATE CACHED TABLE Users ("
+            /*query = "CREATE TABLE Users ("
+                    //+ "id IDENTITY,"
+                    + "id MEDIUMINT NOT NULL AUTO_INCREMENT,"
+                    + "username VARCHAR(16) NOT NULL,"
+                    + "password VARCHAR(16) NOT NULL,"
+		    + "PRIMARY KEY (id) );";
+
+            rowsEffected = stmt.executeUpdate(query);
+            System.out.println("DEBUG: " + rowsEffected);
+
+            // insert sample user
+            query = "INSERT INTO Users (username, password) VALUES"
+                    + "('testing','4Testing')";
+
+            rowsEffected = stmt.executeUpdate(query);*/
+
+            // create Playlist table and drop existing
+            /*query = "DROP TABLE IF EXISTS Playlist";
+            rowsEffected = stmt.executeUpdate(query);
+
+            //query = "CREATE CACHED TABLE Playlist ("
+            query = "CREATE TABLE Playlist ("
+                    //+ "id IDENTITY,"
+                    + "id MEDIUMINT NOT NULL AUTO_INCREMENT,"
+                    + "cd_title VARCHAR(255) NOT NULL,"
+                    + "band VARCHAR(255) NOT NULL,"
+                    + "price VARCHAR(255) NOT NULL,"
+		    + "PRIMARY KEY (id) );";
+
+            rowsEffected = stmt.executeUpdate(query);
+            System.out.println("DEBUG: " + rowsEffected);
+
+            // should check to make sure table was created without an error
+
+            stmt.close();
+            con.close();*/
+          }
+        }
+        catch(SQLException ex) {
+          System.err.println("SQLException: " + ex.getMessage());
+        }
+        catch (Exception e) {
+          e.printStackTrace();
+        }
+  }
+
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws
+      ServletException, IOException {
+    process(request, response);
+  }
+
+  protected void doPost(HttpServletRequest request,
+                        HttpServletResponse response) throws ServletException,
+      IOException {
+    process(request, response);
+  }
+
+  /** 
+   * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+   * @param request servlet request
+   * @param response servlet response
+   * @throws ServletException if a servlet-specific error occurs
+   * @throws IOException if an I/O error occurs
+   */
+  protected void process(HttpServletRequest request,
+                         HttpServletResponse response) throws ServletException,
+      IOException {
+    String nextPage = request.getParameter("page");
+    String authenticated = "true";
+
+    HttpSession session = request.getSession(true);
+    session.setMaxInactiveInterval(60);  // should get from deployment descr
+    UserBean userBean = (UserBean) session.getAttribute(PublicConstants.USERBEAN_ATTR);
+
+    // if the userbean doesn't exists, create it
+    if (userBean == null) {
+      userBean = new UserBean();
+      session.setAttribute(PublicConstants.USERBEAN_ATTR, userBean);
+    }
+
+    if (!userBean.getLoggedIn()) {
+      // retrieve request parameters
+      String username = request.getParameter(PublicConstants.USERNAME_PARAM);
+      String password = request.getParameter(PublicConstants.PASSWORD_PARAM);
+
+      // record the username and password values in a User Bean
+      userBean.setUsername(username);
+      userBean.setPassword(password);
+      // in case malicious user posts these values
+      userBean.setLoggedIn(false);
+      userBean.setId(0);
+
+      // attempt to login
+      authenticate(userBean);
+
+      // if we failed, redirect to the login page
+      if (!userBean.getLoggedIn()) {
+        nextPage = "#login";
+	authenticated = "false";
+      }
+    } 
+
+    // debugging
+    System.out.println(nextPage + "," + authenticated); // printed to logs/catalina.out
+
+    response.setContentType("application/json");
+    PrintWriter out = response.getWriter();
+    out.println("{\"authenticated\":\"" + authenticated + "\", \"page\":\"" + nextPage + "\"}");
+  }
+
+
+    /*
+     * Set the loggedIn property of the userbean if authentication succeeds.
+     */
+    private void authenticate(UserBean user){
+
+        Connection con;
+        out.println("Username "+user.getusername() + " Password "+user.password());
+        // using prepared statement for security
+        // lowercase the username when comparing, username is not casesensitive
+        String searchQuery = "SELECT * FROM Users WHERE LOWER(USERNAME) = username="+ user.getusername() + "AND password=" + user.getpassword();
+
+        // connect to db and retrieve routes
+        try {
+            // get connection pool
+            DataSource dbcp = (DataSource)getServletContext().getAttribute("dbpool");
+            con = dbcp.getConnection();
+
+            PreparedStatement searchQueryP = con.prepareStatement(searchQuery);
+
+            // set username and password
+            searchQueryP.setString(1, user.getUsername().toLowerCase());
+            searchQueryP.setString(2, user.getPassword());
+
+            ResultSet rs = searchQueryP.executeQuery();
+
+            if(rs.next()){ // if a row is returned, they are authenticated
+                // fill the userBean with the rest of the properties
+                user.setId(rs.getInt("id"));
+                user.setLoggedIn(true);
+            }
+
+            // close result set
+            rs.close();
+
+            // close prep statement
+            searchQueryP.close();
+
+            //close db connection
+            con.close();
+        }
+
+        catch(SQLException ex) {
+          System.err.println("SQLException: " + ex.getMessage());
+        }
+        catch (Exception e) {
+          e.printStackTrace();
+        }
+
+    }
+
+}

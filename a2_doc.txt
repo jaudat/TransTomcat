@@ -1,0 +1,10 @@
+Name: Jaudat Syed
+Student Number: 997054100
+
+Name: Syed Ather Hasnain Rizvi
+Student Number: 997250291
+
+The Assignment could have been more clearer as sometimes we didn't know if we had to follow the format exactly, for example for
+the titles we didn't know what values from the JSON we should Dynamically insert. Otherwise at the beginning just getting startedwith JQM was a bit troubling, but once you got the hang of it the rest became much easier. It just took a long time to
+get to know the library and get started. I found the tutorial and lecture examples to be very relavent and helpful for the assignment. We have added transitions between pages. I have again added dynamic headlines when getting the runs and when 
+getting stops. The Dictionary stored in Local Storage is in exactly the same format as shown in your assignment

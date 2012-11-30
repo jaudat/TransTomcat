@@ -1,0 +1,111 @@
+<!DOCTYPE web-app 
+   PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN" 
+   "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
+
+<web-app>
+   <!-- this is where we specify our servlet's java class -->
+   <servlet>
+      <servlet-name>Controller</servlet-name>
+      <servlet-class>hellobeans.Controller</servlet-class>
+   </servlet>
+
+<session-config>
+<session-timeout>60</session-timeout>
+</session-config>
+
+   <context-param>
+      <param-name>dbInit</param-name>
+      <param-value>true</param-value>
+   </context-param>
+
+
+
+   <servlet>
+      <servlet-name>SaveStops</servlet-name>
+      <servlet-class>hellobeans.SaveStops</servlet-class>
+   </servlet>
+
+    <servlet>
+      <servlet-name>DeleteStops</servlet-name>
+      <servlet-class>hellobeans.DeleteStops</servlet-class>
+   </servlet>
+
+   <servlet>
+      <servlet-name>AddAccount</servlet-name>
+      <servlet-class>hellobeans.AddAccount</servlet-class>
+   </servlet>
+
+    <servlet>
+      <servlet-name>Trivial</servlet-name>
+      <servlet-class>hellobeans.Trivial</servlet-class>
+   </servlet>
+
+   <servlet>
+      <servlet-name>Login</servlet-name>
+      <servlet-class>hellobeans.Login</servlet-class>
+   </servlet>
+
+     <servlet>
+      <servlet-name>GetStops</servlet-name>
+      <servlet-class>hellobeans.GetStops</servlet-class>
+   </servlet>
+
+
+    <servlet>
+      <servlet-name>AddStops</servlet-name>
+      <servlet-class>hellobeans.AddStops</servlet-class>
+   </servlet>
+
+
+
+   <!-- this is where we specify the path to access our servlet -->
+
+   <servlet-mapping>
+      <servlet-name>GetStops</servlet-name>
+      <url-pattern>/GetStops</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+      <servlet-name>SaveStops</servlet-name>
+      <url-pattern>/SaveStops</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+      <servlet-name>Controller</servlet-name>
+      <url-pattern>/Controller</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+      <servlet-name>DeleteStops</servlet-name>
+      <url-pattern>/DeleteStops</url-pattern>
+   </servlet-mapping>
+
+
+
+   <servlet-mapping>
+      <servlet-name>AddAccount</servlet-name>
+      <url-pattern>/AddAccount</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+      <servlet-name>Trivial</servlet-name>
+      <url-pattern>/Trivial</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+      <servlet-name>Login</servlet-name>
+      <url-pattern>/Login</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+      <servlet-name>AddStops</servlet-name>
+      <url-pattern>/AddStops</url-pattern>
+   </servlet-mapping>
+
+
+   <!-- start H2 DB from the App itself -->
+   <listener>
+      <listener-class>org.h2.server.web.DbStarter</listener-class>
+   </listener>
+
+</web-app>
