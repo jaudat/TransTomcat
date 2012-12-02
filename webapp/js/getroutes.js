@@ -396,14 +396,14 @@ var MY_URL = "https://mathlab.utsc.utoronto.ca/courses/cscc09f12/syedjaud/";
 $('a.map_me').live("click", function(event) {
     /* stopsnearme.php extracts stops near user geolocation from Stops table
 	and Runs table (run_display_name) */
-    $.getJSON(MY_URL + "nearme.php?lat=" + lat + "&lon=" + lon, function(data) {
+    $.getJSON(PHP_URL + "stopsnearme.php?lat=" + lat + "&lon=" + lon, function(data) {
         stopsNearMe = data.items;  // extract the list of nearby stops
 	mapStops(stopsNearMe);
     });
-    $.mobile.changePage('#my_map');
+    $.mobile.changePage('#mapPage');
 });
 
-$('#my_map').live("pageshow", function(event) {
+$('#mapPage').live("pageshow", function(event) {
     drawMap();  // redraw the map when page is shown
 });
 
