@@ -9,11 +9,17 @@ import javax.sql.DataSource;
 
 
 
+
 public class Login extends HttpServlet {
 
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws
       IOException, ServletException {
+   
     process(request, response);
+
+
+
+
   }
 
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws
@@ -39,14 +45,8 @@ public class Login extends HttpServlet {
     if (tempuser.getid() != 0) {
       // In this case, finished with the bean, clear so it does not
       // interfere with use of bean for next add account attempt.
-      //Integer.parseInt( string );
-      //String dbInit = getServletContext().getInitParameter("idleTimeout");
-      //session.setMaxInactiveInterval(30);
-
       session.setAttribute(PublicConstants.USERBEAN_ATTR, tempuser);
       authenticated=tempuser.getid();
-      //tempstops = getstops(tempuser);
-      //authenticated = tempstops.getuser_id()+100;
 
     }
     else{
@@ -75,6 +75,11 @@ public class Login extends HttpServlet {
     Connection con;
     String query = "SELECT * FROM Users WHERE password="+"'"+ub.getpassword() +"'"+" and username=" + "'"+ub.getusername()+"'";
     int found=0;
+
+    ServletContext context = getServletContext();
+    incrementCount(context);
+   
+  
     try {
      
      
@@ -108,44 +113,17 @@ public class Login extends HttpServlet {
     return ub;
   }
 
-  /*public MyStopsBeans getstops(UserBean ub) {
-    Connection con;
-    int found=0;
-    MyStopsBeans returnstops=new MyStopsBeans();
-    try {
-      //out.println("HELLO");
-      con = DBUtil.getConnection();
-      // Get a statement (used to issue SQL statements to the DB)
-      Statement stmt = con.createStatement();
-      
-      // Insert the requested uid, pwd into the table
-
-      String query = "SELECT * FROM MyStops WHERE user_id="+"'"+ub.getid()+"'";
-      ResultSet rs = stmt.executeQuery(query);
-
-      if(rs.next()){ // if a row is returned, they are authenticated
-                // fill the userBean with the rest of the properties
-        returnstops.setid(rs.getInt("id"));
-        returnstops.setrouteid(rs.getString("routeid"));
-        returnstops.setroute_title(rs.getString("route_title"));
-        returnstops.setrunid(rs.getString("runid"));
-        returnstops.setrun_title(rs.getString("run_title"));
-        returnstops.setstopid(rs.getString("stopid"));
-        returnstops.setstop_title(rs.getString("stop_title"));
-        returnstops.setuser_id(rs.getInt("user_id"));
-
-              
-      }else{
-        returnstops.setid(0);
-
-      }
-      stmt.close();
-      con.close();
+private synchronized void incrementCount(ServletContext c) {
+    Integer visitors = (Integer)c.getAttribute("visits");
+    if (visitors == null) {
+      visitors=0;
     }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
-    return returnstops;
-  }*/
+    visitors++;
+    c.setAttribute("visits",visitors);
+    
+   }
+
+
+  
 
 }

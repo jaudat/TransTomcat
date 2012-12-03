@@ -39,15 +39,14 @@ public class AddAccount extends HttpServlet {
       
     }
 
-    //else
-    //RequestDispatcher dispatcher = request.getRequestDispatcher(nextPage);
-    //dispatcher.forward(request, response);
-
   }
 
   public int createAccount(UserBean ub) {
     Connection con;
     int rowsEffected = 0;
+    ServletContext context = getServletContext();
+    incrementCount(context);
+   
 
     try {
       //out.println("HELLO");
@@ -76,5 +75,15 @@ public class AddAccount extends HttpServlet {
     }
     return rowsEffected;
   }
+
+  private synchronized void incrementCount(ServletContext c) {
+    Integer visitors = (Integer)c.getAttribute("visits");
+    if (visitors == null) {
+      visitors=0;
+    }
+    visitors++;
+    c.setAttribute("visits",visitors);
+    
+   }
 
 }
