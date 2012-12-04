@@ -51,11 +51,11 @@ $('.stop-flip').live("change", function(event) {
 	if (routelst[0] == 0) { 
 		var index = stopRoutes.indexOf(routelst[1]);
 		stopRoutes.splice(index,1);
-		console.log("StopRoutes is "+ stopRoutes)
+		//console.log("StopRoutes is "+ stopRoutes)
 	}
 	else {
 		stopRoutes.push(routelst[1])
-		console.log("StopRoutes is "+ stopRoutes)
+		//console.log("StopRoutes is "+ stopRoutes)
 	}
 	//console.log("Value is" + routelst[0]);
 	});
@@ -66,11 +66,11 @@ $('.vehicle-flip').live("change", function(event) {
 	if (routelst[0] == 0) { 
 		var index = vehicleRoutes.indexOf(routelst[1]);
 		vehicleRoutes.splice(index,1);
-		console.log("StopRoutes is "+ vehicleRoutes)
+		//console.log("vehicleRoutes is "+ vehicleRoutes)
 	}
 	else {
 		vehicleRoutes.push(routelst[1])
-		console.log("StopRoutes is "+ vehicleRoutes)
+		//console.log("vehicleRoutes is "+ vehicleRoutes)
 	}
 	//console.log("Value is" + routelst[0]);
 	}); 
