@@ -324,6 +324,71 @@
         </div>
       </div>
     </div>
+    </div>
+
+<!-- InfoPage. -->
+
+ <div data-role="page" class="page-map" id="infoPage" data-theme="b" >
+
+  <div data-role="header" data-position="fixed" data-id="nav1">
+    <h1>TTC Info</h1>
+      <div class="ui-btn-right">
+    <a href="#mapPage" id="me" data-icon="check" data-theme="b" 
+        data-role="button" data-mini="true" class="map_me">Me</a>
+    <a href="#loginPage" data-icon="check" data-theme="b"
+      data-role="button" class="login">Login</a>
+      </div>
+  </div>
+
+  <div data-role="content">
+            <div>
+              <style>
+              </style>
+              <span><strong>Rate Your Ride <small>1: worst, 5: best</small></strong>
+        <a href="#" data-role="button" data-mini="true"
+      data-inline="true">Submit Feedback</a></span>
+              <input type="range" name="slider-rateme" id="slider-rateme"
+      value="3" min="1" max="5" step="0.5" data-highlight="true"
+      data-mini="true" class="rateme" />
+            </div> <!-- feedback -->
+            <div>
+              <h3>Service Alerts</h3>
+                <div id="svc_alerts" style="font-size:.8em"> <!-- service alerts -->
+                </div> <!-- service alerts -->
+            </div> <!-- service -->
+            <div> <!-- promo video -->
+              <h3>Behind the Scenes at the TTC</h3>
+              <video id="video_with_controls" width="400" controls autobuffer>
+               <source src="img/small.mp4" type="video/mp4" /> 
+               <source src="img/small.ogv" type='video/ogg; codecs="theora, vorbis"'/> 
+               Your browser does not support the video tag
+              </video>
+            </div> <!-- promo -->
+            <div>
+              <h3>Contact Us</h3>
+              33 Davisville Ave <br/>
+              Toronto, ON  M1S 2W7 <br/>
+              <a href="tel:4163934636" data-role="button" data-mini="true" data-inline="true"
+      rel="external">(416) 393-4636</a>
+            </div> <!-- contact -->
+
+        </div>    
+
+  <div data-role="footer" class="footerDiv" data-id="nav1"
+      data-position="fixed">
+    <div data-role="navbar">
+    <ul>
+      <li><a href="#all_routes" data-icon="home" data-transition="slideup">Routes</a></li>
+      <li><a href="#saved_stops" data-icon="arrow-u" class="btn
+      mystops" data-transition="slideup" >My Stops</a></li>
+      <li><a href="#" data-icon="grid">Map</a></li>
+      <li><a href="#infoPage" data-icon="info">Info</a></li>
+      <li><a href="#register" data-icon="info">Register</a></li>
+    </ul>
+      </div>
+  </div> <!-- /footer -->
+    </div>  <!-- infoPage -->
+
 
   </body>
 </html>

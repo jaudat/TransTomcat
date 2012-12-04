@@ -73,7 +73,7 @@ $('.vehicle-flip').live("change", function(event) {
 		console.log("StopRoutes is "+ vehicleRoutes)
 	}
 	//console.log("Value is" + routelst[0]);
-	});
+	}); 
 	
 $('a.runs').live("click", function(event) {
   
@@ -449,5 +449,19 @@ $('a.map_me').live("click", function(event) {
 
 $('#mapPage').live("pageshow", function(event) {
     drawMap();  // redraw the map when page is shown
+});
+
+
+$('#infoPage').live("pageshow", function(event) {
+  alert("jere");
+    $('#svc_alerts').empty();  // clear the HTML list before rebuilding it
+    $.get("https://www.utsc.utoronto.ca/~rosselet/cscc09f12/asn/services/getalerts.php", function(data) {
+      //https://www.utsc.utoronto.ca/~rosselet/cscc09f12/asn/services/
+  var ttcPage = data;
+  var svcAlerts = $(ttcPage).find(".ttc-service-alert p").not('.alert-updated');
+  $.each(svcAlerts, function(index, data) {
+      $('#svc_alerts').append(data);
+  });
+    });
 });
 
