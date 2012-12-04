@@ -13,6 +13,9 @@ serviceURL_predict = "http://www.utsc.utoronto.ca/~rosselet/cscc09f12/asn/servic
 var disp_username="Alias";
 
 var userid;
+var stopRoutes = [];
+var vehicleRoutes = [];
+
 
 $('#all_routes').live('pageinit', function(event){
   geoLocation();
@@ -26,11 +29,52 @@ function getRoutes(data){
   disp_route=data.items;
   $('#list_routes').empty();
   $.each(disp_route, function(key,value) {
-	  $('#list_routes').append('<li><a href="#route_runs" data-transition=\"slide\" class="btn runs" id="'+value.id+'" routedisp="'+value.display_name+'">' + value.display_name + '</a></li>');
+	  $('#list_routes').append('<li><a href="#route_runs" data-transition=\"slide\" class="btn runs" id="'+value.id+'" routedisp="'+value.display_name+'">' + value.display_name + '</a>'
+	  + '<label> Map Stops <select name="stop-flip" class="stop-flip" data-role="slider">'
+	  + '<option value="0;'+value.id+'">Off</option>'
+	  + '<option value="1;'+value.id+'">On</option>'
+      + '</select> </label>'
+      + '<label> Map Vehicles <select name="vehicle-flip" class="vehicle-flip" data-role="slider">'
+	  + '<option value="0;'+value.id+'">Off</option>'
+	  + '<option value="1;'+value.id+'">On</option>'
+      + '</select> </label></li>');
   });
   $('#list_routes').listview('refresh');
+  $('.stop-flip').slider();
+  $('.vehicle-flip').slider();
 }
 
+
+$('.stop-flip').live("change", function(event) { 
+	var routeid = $(this).attr("value");
+	var routelst = routeid.split(';');
+	if (routelst[0] == 0) { 
+		var index = stopRoutes.indexOf(routelst[1]);
+		stopRoutes.splice(index,1);
+		console.log("StopRoutes is "+ stopRoutes)
+	}
+	else {
+		stopRoutes.push(routelst[1])
+		console.log("StopRoutes is "+ stopRoutes)
+	}
+	//console.log("Value is" + routelst[0]);
+	});
+	
+$('.vehicle-flip').live("change", function(event) { 
+	var routeid = $(this).attr("value");
+	var routelst = routeid.split(';');
+	if (routelst[0] == 0) { 
+		var index = vehicleRoutes.indexOf(routelst[1]);
+		vehicleRoutes.splice(index,1);
+		console.log("StopRoutes is "+ vehicleRoutes)
+	}
+	else {
+		vehicleRoutes.push(routelst[1])
+		console.log("StopRoutes is "+ vehicleRoutes)
+	}
+	//console.log("Value is" + routelst[0]);
+	});
+	
 $('a.runs').live("click", function(event) {
   
   window['route_tag'] = $(this).attr('id'); 
@@ -244,9 +288,9 @@ function drawMap() {
     });
 
     mapStops(stopsNearMe);  // add markers for stops near user
-    var stopRoutes = [510, 509];
+    //var stopRoutes = [510, 509];
     mapRouteStops(stopRoutes);  // add markers for user-selected route stops
-    var vehicleRoutes = [7, 501];
+    //var vehicleRoutes = [7, 501];
     mapVehicles(vehicleRoutes);  // add markers for user-selected route vehicles
     // refresh vehicle markers every 30 seconds to show updated vehicle positions
     setInterval(function() { mapVehicles(vehicleRoutes); }, 30000); 
